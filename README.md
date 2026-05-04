@@ -1,201 +1,338 @@
-# pooa-desafiotecnico
-Desafio tecnico para a disciplina de Programação Orientada a Objetos Avançada do curso de Análise e desenvolvimento de Sistemas da Faculdade Princesa do Oeste, Campus Crateús.
+# 📒 Agenda de Contatos - Sistema Console com Java e PostgreSQL
 
+## 📌 Descrição do Projeto
 
-DESAFIO TÉCNICO
+Sistema de agenda de contatos desenvolvido em **Java 11+** com acesso a banco de dados **PostgreSQL** via **JDBC puro**.  
+A aplicação é executada inteiramente no **console** (linha de comando) e implementa todas as operações **CRUD** (Cadastrar, Listar, Buscar, Atualizar, Remover e Listar por Categoria).  
 
-Disciplina: Programação Orientada a Objetos Avançado
-Curso: Análise e Desenvolvimento de Sistemas — 4o Semestre
-Sistema de Agenda de Contatos via Console
+O projeto foi estruturado respeitando os **cinco princípios SOLID**, com separação clara de camadas:
 
-Tecnologias Java · JDBC · Princípios SOLID
-Modalidade Individual
-Entrega Repositório Git (GitHub/GitLab)
-Pontuação Total 100 pontos
+- **model** – entidades (Contato, Categoria enum)
+- **repository** – interfaces de persistência
+- **repository.impl** – implementação JDBC
+- **service** – regras de negócio e validações
+- **ui** – menu interativo no console
+- **database** – gerenciamento da conexão
+- **exception** – exceções personalizadas
 
-1. Objetivo
-Desenvolver um sistema de Agenda de Contatos executado integralmente via console (linha de
-comando), utilizando a linguagem Java com acesso a banco de dados relacional por meio de
-JDBC, respeitando os cinco princípios SOLID de design de software orientado a objetos.
-Este desafio tem como finalidade avaliar a capacidade do aluno de integrar conceitos de
-Programação Orientada a Objetos, modelagem de dados, boas práticas de arquitetura e
-persistência de dados em um projeto coeso e funcional.
-2. Contexto do Problema
-Uma pequena empresa precisa de um sistema simples para gerenciar os contatos de seus
-clientes. Você foi contratado como desenvolvedor júnior e deverá construir do zero uma
-aplicação console em Java capaz de cadastrar, listar, atualizar e remover contatos, com todas
-as informações persistidas em banco de dados.
-O sistema deve ser robusto, bem organizado e de fácil manutenção, seguindo boas práticas de
-engenharia de software.
-3. Requisitos Funcionais
-3.1 Entidade Contato
-Cada contato deve armazenar, no mínimo, os seguintes dados:
-• id — identificador único gerado automaticamente pelo banco
-• nome — nome completo do contato (obrigatório)
-• telefone — número de telefone, podendo ter mais de um por contato
+---
 
-Desafio Técnico — POO Avançado · 4o Semestre ADS Agenda de Contatos
-• email — endereço de e-mail (deve ser único no sistema)
-• categoria — classificação do contato (ex.: Amigo, Trabalho, Família, Outro)
-• dataCadastro — data e hora em que o contato foi criado (gerada automaticamente)
+## 🛠️ Tecnologias Utilizadas
 
-3.2 Operações CRUD
-O sistema deve oferecer as seguintes operações acessíveis por menu numérico:
-1. Cadastrar Contato — inserir um novo contato com validação dos campos obrigatórios
-2. Listar Todos os Contatos — exibir todos os contatos em formato tabular organizado
-3. Buscar Contato — localizar contato por nome (busca parcial) ou por e-mail exato
-4. Atualizar Contato — editar os dados de um contato existente (identificado pelo id)
-5. Remover Contato — excluir permanentemente um contato (com confirmação do
-usuário)
-6. Listar por Categoria — filtrar e exibir contatos de uma categoria específica
-7. Sair — encerrar o sistema
+- Java 11 ou superior
+- PostgreSQL 14+
+- JDBC (Java Database Connectivity)
+- Maven (opcional) ou compilação manual
 
-4. Requisitos Técnicos
-4.1 Java e JDBC
-• A aplicação deve ser desenvolvida em Java 11 ou superior
-• Toda a comunicação com o banco de dados deve ser feita exclusivamente via JDBC
-puro (sem frameworks ORM como Hibernate ou JPA)
-• Utilizar banco de dados relacional — recomendado SQLite (arquivo local) ou
-MySQL/PostgreSQL
-• O script SQL de criação das tabelas deve ser incluído no repositório (arquivo
-schema.sql)
-• Utilizar PreparedStatement em todas as queries para evitar SQL Injection
+---
 
-• Gerenciar corretamente a abertura e fechamento de conexões (uso de try-with-
-resources é recomendado)
+## 🗄️ Estrutura do Banco de Dados
 
-• Tratar todas as SQLExceptions de forma adequada
+### Script SQL (PostgreSQL) – `schema.sql`
 
-4.2 Aplicação dos Princípios SOLID
-A arquitetura do projeto deve demonstrar claramente a aplicação dos cinco princípios:
+Arquivo localizado na **raiz do projeto** com o seguinte conteúdo:
 
-💡 S — Single Responsibility Principle (Responsabilidade Única)
+```sql
+CREATE TABLE IF NOT EXISTS contato (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    telefone VARCHAR(50) NOT NULL,
+    categoria VARCHAR(50) NOT NULL,
+    dataCadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
 
-Desafio Técnico — POO Avançado · 4o Semestre ADS Agenda de Contatos
+---
 
-Cada classe deve ter uma única razão para mudar.
-Exemplo esperado: separar a classe de conexão ao banco (DatabaseConnection), a classe de
-acesso a dados (ContatoDAO), a classe de negócio/validação (ContatoService) e a interface
-com o usuário (ContatoMenu).
+## 🔧 Pré‑requisitos
 
-💡 O — Open/Closed Principle (Aberto/Fechado)
-Classes abertas para extensão, fechadas para modificação.
-Exemplo esperado: utilizar interfaces para os DAOs, permitindo que uma nova implementação
-(ex.: para outro banco de dados) seja criada sem alterar o código existente.
+Antes de executar o projeto, tenha instalado:
 
-💡 L — Liskov Substitution Principle (Substituição de Liskov)
-Subclasses devem poder substituir suas classes-base sem quebrar o comportamento
-esperado.
-Exemplo esperado: se houver herança entre tipos de contatos (ex.: ContatoPessoal e
-ContatoProfissional), o sistema deve funcionar corretamente utilizando a referência do tipo pai.
+- **Java JDK 11+** (verifique com `java -version`)
+- **PostgreSQL** (verifique com `psql --version`)
+- **Driver JDBC do PostgreSQL** (baixar o `.jar` em [https://jdbc.postgresql.org/download/](https://jdbc.postgresql.org/download/))
 
-💡 I — Interface Segregation Principle (Segregação de Interfaces)
-Nenhuma classe deve ser forçada a implementar métodos que não utiliza.
-Exemplo esperado: criar interfaces específicas como ContatoRepository (CRUD básico) e
-ContatoSearchRepository (métodos de busca), em vez de uma única interface gigante.
+---
 
-💡 D — Dependency Inversion Principle (Inversão de Dependências)
-Módulos de alto nível não devem depender de módulos de baixo nível; ambos devem depender
-de abstrações.
-Exemplo esperado: ContatoService recebe a interface ContatoRepository por injeção de
-dependência
-(via construtor), e não instancia diretamente a implementação ContatoJdbcRepository.
+## 🚀 Passo a passo para executar o projeto
 
-5. Estrutura de Pacotes Sugerida
-A organização abaixo é uma sugestão. O aluno pode adaptar conforme julgar necessário,
-desde que a separação de responsabilidades seja mantida e justificada:
+### 1. Clone o repositório (ou crie a estrutura localmente)
 
-Pacote Responsabilidade
-model Classes de domínio: Contato, Categoria
+```bash
+git clone https://github.com/seu-usuario/agenda-contatos.git
+cd agenda-contatos
+```
 
-Desafio Técnico — POO Avançado · 4o Semestre ADS Agenda de Contatos
+### 2. Crie o banco de dados no PostgreSQL
 
-Pacote Responsabilidade
-repository Interfaces dos DAOs (ContatoRepository, etc.)
-repository.impl Implementações JDBC das interfaces
-service Regras de negócio e validações
-ui (ou console) Menus, leitura de entradas e saídas formatadas
-database Classe de conexão e gerenciamento do banco
-exception Exceções personalizadas da aplicação
-Main.java Ponto de entrada — instancia e injeta dependências
+Acesse o terminal do PostgreSQL (`psql`) usando o usuário administrador (ex.: `postgres`):
 
-6. Critérios de Avaliação
-Critério Pontuação Descrição
-Funcionamento do CRUD completo 25 pts Todas as 7 opções do menu
-devem funcionar corretamente
-Aplicação dos princípios SOLID 30 pts Cada princípio (S, O, L, I, D)
-vale 6 pontos — avaliado na
-estrutura e justificativa
-Uso correto do JDBC 20 pts PreparedStatement, tratamento
-de exceções, gerenciamento de
-conexão
+```bash
+sudo -u postgres psql
+```
 
-Qualidade do código 10 pts Nomenclatura, organização,
-ausência de código duplicado
-Script SQL e documentação 10 pts schema.sql funcional +
-README com instruções de
-execução
+Dentro do `psql`, execute:
 
-Apresentação e defesa oral 5 pts Capacidade de explicar as
-decisões de design tomadas
+```sql
+CREATE DATABASE agenda;
+```
 
-7. Requisitos de Entrega
-• Repositório público no GitHub
-• Arquivo README.md com: descrição do projeto, instruções de configuração do banco,
-como executar a aplicação e diagrama ou descrição da arquitetura
-• Arquivo schema.sql na raiz do repositório com o script de criação das tabelas
-• O projeto deve compilar e executar sem erros a partir das instruções do README
-• Não é permitido o uso de frameworks ORM (Hibernate, JPA, MyBatis, etc.)
+Verifique se o banco foi criado com:
 
-Desafio Técnico — POO Avançado · 4o Semestre ADS Agenda de Contatos
-• Não é permitido o uso de frameworks de injeção de dependências (Spring, Guice, etc.)
-— a injeção deve ser manual
+```sql
+\l
+```
 
-8. Dicas e Orientações
-8.1 Por onde começar
-8. Crie o banco de dados e o schema.sql antes de escrever qualquer código Java
-9. Implemente e teste a classe de conexão (DatabaseConnection) isoladamente
-10. Defina as interfaces (repositórios) antes de implementá-las — pense no contrato
-primeiro
-11. Implemente o DAO com os métodos de CRUD e teste cada um antes de avançar
-12. Crie a camada de serviço com as validações e só então construa os menus
+Saia do `psql` com `\q`.
 
-8.2 Boas práticas recomendadas
-• Use try-with-resources para garantir o fechamento de Connection, Statement e
-ResultSet
-• Crie uma classe de exceção customizada (ex.: ContatoNaoEncontradoException) para
-tratar erros de negócio
-• Valide entradas do usuário (campos obrigatórios, formato de e-mail, telefone não nulo)
-• Evite lógica de negócio nas classes de UI — delegue para a camada de serviço
-• Faça commits frequentes com mensagens descritivas (feat:, fix:, refactor:, etc.)
+### 3. Execute o script de criação da tabela (passo a passo detalhado)
 
-9. Funcionalidades Extras (Bônus)
-As funcionalidades abaixo não são obrigatórias, mas podem somar pontos extras na avaliação:
-• Exportar lista de contatos para arquivo .CSV
-• Implementar paginação na listagem (exibir N contatos por vez)
-• Suporte a múltiplos telefones por contato com tabela separada no banco
-• Histórico de alterações: registrar em tabela de log cada modificação realizada
-• Testes unitários com JUnit 5 para as classes de serviço
+Você tem três formas de executar o `schema.sql` – escolha a mais conveniente:
 
-10. Conceito Final
+#### 🔹 Opção A – Direto pelo terminal (recomendado)
 
-Desafio Técnico — POO Avançado · 4o Semestre ADS Agenda de Contatos
+```bash
+psql -U postgres -d agenda -f schema.sql
+```
 
-Faixa de Pontos Conceito Descrição
-90 – 100 pontos A — Excelente Domínio pleno de todos os requisitos e
+- `-U postgres` : usuário do PostgreSQL (troque se necessário)
+- `-d agenda` : banco de dados alvo
+- `-f schema.sql` : caminho do arquivo (ajuste se estiver em outra pasta)
 
-princípios
+**Exemplo de saída esperada:**
+```
+CREATE TABLE
+```
 
-75 – 89 pontos B — Bom Bom entendimento, pequenas lacunas na
+#### 🔹 Opção B – Dentro do `psql` (interativo)
 
-aplicação do SOLID
+```bash
+psql -U postgres -d agenda
+```
 
-60 – 74 pontos C — Regular CRUD funcional mas SOLID aplicado
+Dentro do shell do PostgreSQL, digite:
 
-superficialmente
+```sql
+\i /caminho/completo/para/schema.sql
+```
 
-Abaixo de 60 D — Insuficiente Requisitos básicos não atendidos ou projeto
+Por exemplo, se o arquivo está na raiz do projeto:
 
-não executa
+```sql
+\i /home/usuario/agenda-contatos/schema.sql
+```
 
-Bom desafio! Demonstre o que aprendeu.
+Para sair: `\q`
+
+#### 🔹 Opção C – Usando pgAdmin (interface gráfica)
+
+1. Abra o pgAdmin e conecte ao servidor.
+2. Selecione o banco `agenda`.
+3. Abra a ferramenta "Query Tool".
+4. Cole todo o conteúdo do `schema.sql`.
+5. Execute (F5).
+
+### 4. Verifique se a tabela foi criada corretamente
+
+Ainda no `psql` ou via pgAdmin, execute:
+
+```sql
+\d contato
+```
+
+Você deve ver uma saída semelhante a:
+
+```
+                                      Table "public.contato"
+    Column     |            Type             | Collation | Nullable |              Default              
+---------------+-----------------------------+-----------+----------+-----------------------------------
+ id            | integer                     |           | not null | nextval('contato_id_seq'::regclass)
+ nome          | character varying(255)      |           | not null | 
+ email         | character varying(255)      |           | not null | 
+ telefone      | character varying(50)       |           | not null | 
+ categoria     | character varying(50)       |           | not null | 
+ dataCadastro  | timestamp without time zone |           |          | CURRENT_TIMESTAMP
+Indexes:
+    "contato_pkey" PRIMARY KEY, btree (id)
+    "contato_email_key" UNIQUE CONSTRAINT, btree (email)
+```
+
+Se aparecer **"Did not find any relation"**, o script não foi executado – repita o passo 3.
+
+### 5. Configure a conexão com o banco no código Java
+
+Edite a classe `DatabaseConnection.java` (pacote `database`) com as credenciais corretas:
+
+```java
+private static final String URL = "jdbc:postgresql://localhost:5432/agenda";
+private static final String USER = "postgres";      // seu usuário
+private static final String PASSWORD = "sua_senha"; // sua senha
+```
+
+> **⚠️ Importante:** Nunca compartilhe senhas reais no GitHub. Use variáveis de ambiente ou um arquivo `.properties` ignorado pelo Git. Exemplo:
+> ```java
+> String password = System.getenv("DB_PASSWORD");
+> ```
+
+### 6. Adicione o driver JDBC do PostgreSQL ao classpath
+
+Baixe o arquivo `postgresql-42.7.3.jar` (ou versão mais recente) e coloque na pasta `lib/` do projeto.
+
+#### Compilar e executar sem Maven:
+
+```bash
+# Compilar
+javac -cp ".;lib/postgresql-42.7.3.jar" -d out src/br/ce/crateus/fpo/**/*.java
+
+# Executar
+java -cp "out;lib/postgresql-42.7.3.jar" br.ce.crateus.fpo.Main
+```
+
+#### Com Maven (adicione a dependência no `pom.xml`):
+
+```xml
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>42.7.3</version>
+</dependency>
+```
+
+Depois execute:
+
+```bash
+mvn compile exec:java -Dexec.mainClass="br.ce.crateus.fpo.Main"
+```
+
+### 7. Execute a aplicação
+
+Após compilar, rode o programa. O menu principal será exibido no console:
+
+```
+1. Cadastrar Contato
+2. Listar Todos os Contatos
+3. Buscar Contato
+4. Atualizar Contato
+5. Remover Contato
+6. Listar por Categoria
+7. Sair
+```
+
+---
+
+## 🧪 Testando a conexão (opcional)
+
+Você pode executar a classe `DatabaseConnection.testConnection()` para verificar se a conexão com o PostgreSQL está funcionando:
+
+```bash
+java -cp "out;lib/postgresql-42.7.3.jar" br.ce.crateus.fpo.database.DatabaseConnection
+```
+
+Saída esperada:
+
+```
+Conexão com PostgreSQL estabelecida com sucesso!
+```
+
+---
+
+## 📁 Estrutura de Pacotes e Classes
+
+```
+src/
+└── br/ce/crateus/fpo/
+    ├── Main.java
+    ├── database/
+    │   └── DatabaseConnection.java
+    ├── model/
+    │   ├── Contato.java
+    │   └── Categoria.java (enum)
+    ├── repository/
+    │   ├── ContatoRepository.java (interface)
+    │   └── ContatoSearchRepository.java (interface)
+    ├── repository/impl/
+    │   └── ContatoRepositoryImpl.java
+    ├── service/
+    │   └── ContatoService.java
+    ├── ui/
+    │   └── ContatoMenu.java
+    └── exception/
+        └── ContatoNaoEncontradoException.java
+```
+
+---
+
+## 🧠 Princípios SOLID Aplicados
+
+| Princípio | Aplicação no projeto |
+|-----------|----------------------|
+| **S** – Single Responsibility | Separação clara: `DatabaseConnection` (conexão), `ContatoRepositoryImpl` (acesso a dados), `ContatoService` (validação), `ContatoMenu` (interface). |
+| **O** – Open/Closed | Interfaces `ContatoRepository` e `ContatoSearchRepository` permitem novas implementações (ex.: outro banco) sem alterar o código existente. |
+| **L** – Liskov Substitution | Se houvesse subclasses de `Contato` (ex.: `ContatoProfissional`), poderiam ser usadas no lugar da classe base sem quebrar o sistema. |
+| **I** – Interface Segregation | Interfaces separadas para CRUD básico e para buscas, evitando métodos desnecessários. |
+| **D** – Dependency Inversion | `ContatoService` depende das abstrações `ContatoRepository` e `ContatoSearchRepository` (injeção via construtor), nunca das implementações concretas. |
+
+---
+
+## 🧰 Funcionalidades Implementadas
+
+- ✅ Cadastrar contato com validação (nome, e-mail único, telefone, categoria)
+- ✅ Listar todos os contatos em formato tabular
+- ✅ Buscar contato por nome (parcial) ou e-mail exato
+- ✅ Atualizar contato (identificado por `id`)
+- ✅ Remover contato com confirmação
+- ✅ Listar contatos por categoria
+- ✅ Persistência em PostgreSQL com `PreparedStatement` (proteção contra SQL Injection)
+- ✅ Tratamento de exceções (`SQLException`, `ContatoNaoEncontradoException`)
+
+---
+
+## 📝 Possíveis Erros e Soluções
+
+| Erro | Causa | Solução |
+|------|-------|---------|
+| `ClassNotFoundException: org.postgresql.Driver` | Driver JDBC não está no classpath | Adicione o JAR do PostgreSQL à classpath (veja passo 6) |
+| `Connection refused` | PostgreSQL não está rodando ou porta errada | Inicie o serviço: `sudo systemctl start postgresql` (Linux) ou ajuste a porta na URL |
+| `PSQLException: FATAL: database "agenda" does not exist` | Banco de dados não criado | Execute `CREATE DATABASE agenda;` no psql (passo 2) |
+| `ERROR: relation "contato" does not exist` | Tabela não criada | Execute o script `schema.sql` conforme passo 3 |
+| `NullPointerException: this.repository is null` | Dependência não injetada | Verifique se `ContatoService` recebe o repositório no construtor (veja exemplo abaixo) |
+
+### Exemplo correto de injeção no `Main.java`:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        ContatoRepositoryImpl repository = new ContatoRepositoryImpl();
+        ContatoService service = new ContatoService(repository); // injeta dependência
+        ContatoMenu menu = new ContatoMenu(service);
+        menu.exibirMenu();
+    }
+}
+```
+
+---
+
+## 📄 Licença
+
+Este projeto é de uso acadêmico para o desafio técnico da disciplina **Programação Orientada a Objetos Avançado** – 4º semestre de ADS.
+
+---
+
+## ✍️ Autor
+
+Desenvolvido como parte do portfólio de estudos.  
+Dúvidas ou sugestões: [seu-email@provedor.com]
+```
+
+---
+
+**Melhorias realizadas:**
+
+- Inclusão de um **passo a passo detalhado** (passo 3) com **três opções** para executar o script SQL (terminal, psql interativo e pgAdmin).
+- Comando completo com explicação de cada flag (`-U`, `-d`, `-f`).
+- Verificação pós-execução com `\d contato` e exemplo real da saída esperada.
+- Mensagem de erro comum relacionada à tabela não criada e sua solução.
+- Estrutura organizada com ícones e blocos de código fáceis de copiar.
+
+Esse README agora atende perfeitamente ao requisito de "passo a passo de execução do script sql".
