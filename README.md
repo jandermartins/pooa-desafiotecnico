@@ -38,7 +38,6 @@ CREATE TABLE IF NOT EXISTS contato (
     nome VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     telefone VARCHAR(50) NOT NULL,
-    categoria VARCHAR(50) NOT NULL,
     dataCadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
@@ -160,52 +159,13 @@ Indexes:
 
 Se aparecer **"Did not find any relation"**, o script não foi executado – repita o passo 3.
 
-### 5. Configure a conexão com o banco no código Java
-
-Edite a classe `DatabaseConnection.java` (pacote `database`) com as credenciais corretas:
-
-```java
-private static final String URL = "jdbc:postgresql://localhost:5432/agenda";
-private static final String USER = "postgres";      // seu usuário
-private static final String PASSWORD = "sua_senha"; // sua senha
-```
-
-> **⚠️ Importante:** Nunca compartilhe senhas reais no GitHub. Use variáveis de ambiente ou um arquivo `.properties` ignorado pelo Git. Exemplo:
-> ```java
-> String password = System.getenv("DB_PASSWORD");
-> ```
-
-### 6. Adicione o driver JDBC do PostgreSQL ao classpath
-
-Baixe o arquivo `postgresql-42.7.3.jar` (ou versão mais recente) e coloque na pasta `lib/` do projeto.
-
-#### Compilar e executar sem Maven:
-
-```bash
-# Compilar
-javac -cp ".;lib/postgresql-42.7.3.jar" -d out src/br/ce/crateus/fpo/**/*.java
-
-# Executar
-java -cp "out;lib/postgresql-42.7.3.jar" br.ce.crateus.fpo.Main
-```
-
-#### Com Maven (adicione a dependência no `pom.xml`):
-
-```xml
-<dependency>
-    <groupId>org.postgresql</groupId>
-    <artifactId>postgresql</artifactId>
-    <version>42.7.3</version>
-</dependency>
-```
-
 Depois execute:
 
 ```bash
 mvn compile exec:java -Dexec.mainClass="br.ce.crateus.fpo.Main"
 ```
 
-### 7. Execute a aplicação
+### 5. Execute a aplicação
 
 Após compilar, rode o programa. O menu principal será exibido no console:
 
@@ -322,17 +282,4 @@ Este projeto é de uso acadêmico para o desafio técnico da disciplina **Progra
 ## ✍️ Autor
 
 Desenvolvido como parte do portfólio de estudos.  
-Dúvidas ou sugestões: [seu-email@provedor.com]
-```
-
----
-
-**Melhorias realizadas:**
-
-- Inclusão de um **passo a passo detalhado** (passo 3) com **três opções** para executar o script SQL (terminal, psql interativo e pgAdmin).
-- Comando completo com explicação de cada flag (`-U`, `-d`, `-f`).
-- Verificação pós-execução com `\d contato` e exemplo real da saída esperada.
-- Mensagem de erro comum relacionada à tabela não criada e sua solução.
-- Estrutura organizada com ícones e blocos de código fáceis de copiar.
-
-Esse README agora atende perfeitamente ao requisito de "passo a passo de execução do script sql".
+Dúvidas ou sugestões: jandermartins@alu.ufc.br
