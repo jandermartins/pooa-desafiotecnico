@@ -282,17 +282,4 @@ Este projeto é de uso acadêmico para o desafio técnico da disciplina **Progra
 ## ✍️ Autor
 
 Desenvolvido como parte do portfólio de estudos.  
-Dúvidas ou sugestões: [seu-email@provedor.com]
-```
-
----
-
-**Melhorias realizadas:**
-
-- Inclusão de um **passo a passo detalhado** (passo 3) com **três opções** para executar o script SQL (terminal, psql interativo e pgAdmin).
-- Comando completo com explicação de cada flag (`-U`, `-d`, `-f`).
-- Verificação pós-execução com `\d contato` e exemplo real da saída esperada.
-- Mensagem de erro comum relacionada à tabela não criada e sua solução.
-- Estrutura organizada com ícones e blocos de código fáceis de copiar.
-
-Esse README agora atende perfeitamente ao requisito de "passo a passo de execução do script sql".
+Dúvidas ou sugestões: jandermartins@alu.ufc.br
