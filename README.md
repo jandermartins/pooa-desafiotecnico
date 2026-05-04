@@ -159,52 +159,13 @@ Indexes:
 
 Se aparecer **"Did not find any relation"**, o script não foi executado – repita o passo 3.
 
-### 5. Configure a conexão com o banco no código Java
-
-Edite a classe `DatabaseConnection.java` (pacote `database`) com as credenciais corretas:
-
-```java
-private static final String URL = "jdbc:postgresql://localhost:5432/agenda";
-private static final String USER = "postgres";      // seu usuário
-private static final String PASSWORD = "sua_senha"; // sua senha
-```
-
-> **⚠️ Importante:** Nunca compartilhe senhas reais no GitHub. Use variáveis de ambiente ou um arquivo `.properties` ignorado pelo Git. Exemplo:
-> ```java
-> String password = System.getenv("DB_PASSWORD");
-> ```
-
-### 6. Adicione o driver JDBC do PostgreSQL ao classpath
-
-Baixe o arquivo `postgresql-42.7.3.jar` (ou versão mais recente) e coloque na pasta `lib/` do projeto.
-
-#### Compilar e executar sem Maven:
-
-```bash
-# Compilar
-javac -cp ".;lib/postgresql-42.7.3.jar" -d out src/br/ce/crateus/fpo/**/*.java
-
-# Executar
-java -cp "out;lib/postgresql-42.7.3.jar" br.ce.crateus.fpo.Main
-```
-
-#### Com Maven (adicione a dependência no `pom.xml`):
-
-```xml
-<dependency>
-    <groupId>org.postgresql</groupId>
-    <artifactId>postgresql</artifactId>
-    <version>42.7.3</version>
-</dependency>
-```
-
 Depois execute:
 
 ```bash
 mvn compile exec:java -Dexec.mainClass="br.ce.crateus.fpo.Main"
 ```
 
-### 7. Execute a aplicação
+### 5. Execute a aplicação
 
 Após compilar, rode o programa. O menu principal será exibido no console:
 
