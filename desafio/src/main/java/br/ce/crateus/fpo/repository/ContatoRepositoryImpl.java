@@ -3,9 +3,8 @@ package br.ce.crateus.fpo.repository;
 import br.ce.crateus.fpo.database.DatabaseConnection;
 import br.ce.crateus.fpo.model.Contato;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContatoRepositoryImpl implements ContatoRepository{
@@ -25,7 +24,18 @@ public class ContatoRepositoryImpl implements ContatoRepository{
 
     @Override
     public void atualizar(Contato contato) {
+        String sql = "UPDATE contato SET nome = ?, email = ?, telefone = ? WHERE id = ?";
 
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, contato.getNome());
+            stmt.setString(2, contato.getEmail());
+            stmt.setString(3, contato.getTelefone());
+            stmt.setLong(5, contato.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar contato", e);
+        }
     }
 
     @Override
@@ -35,6 +45,54 @@ public class ContatoRepositoryImpl implements ContatoRepository{
 
     @Override
     public List<Contato> listarTodos() {
-        return List.of();
+        List<Contato> contatos = new ArrayList<>();
+        String sql = "SELECT * FROM contato ORDER BY nome";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Contato c = new Contato();
+                c.setId(rs.getLong("id"));
+                c.setNome(rs.getString("nome"));
+                c.setEmail(rs.getString("email"));
+                c.setTelefone(rs.getString("telefone"));
+                Timestamp ts = rs.getTimestamp("dataCadastro");
+                if (ts != null) c.setDataCadastro(ts.toLocalDateTime());
+                contatos.add(c);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar contatos", e);
+        }
+        return contatos;
+    }
+
+    @Override
+    public List<Contato> buscarPorNome(String nome) {
+        List<Contato> contatos = new ArrayList<>();
+        String sql = "SELECT * FROM contato WHERE nome ILIKE ? ORDER BY nome";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + nome + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                contatos.add(mapper(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar contatos por nome", e);
+        }
+        return contatos;
+    }
+
+    private Contato mapper(ResultSet rs) throws SQLException {
+        Contato c = new Contato();
+        c.setId(rs.getLong("id"));
+        c.setNome(rs.getString("nome"));
+        c.setEmail(rs.getString("email"));
+        c.setTelefone(rs.getString("telefone"));
+        Timestamp ts = rs.getTimestamp("dataCadastro");
+        if (ts != null) {
+            c.setDataCadastro(ts.toLocalDateTime());
+        }
+        return c;
     }
 }

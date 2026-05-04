@@ -9,6 +9,10 @@ public class Contato {
     private String email;
     private LocalDateTime dataCadastro;
 
+    public Contato() {
+
+    }
+
 
     public LocalDateTime getDataCadastro() {
         return dataCadastro;

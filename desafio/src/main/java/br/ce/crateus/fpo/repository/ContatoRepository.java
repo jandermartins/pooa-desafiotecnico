@@ -9,4 +9,6 @@ public interface ContatoRepository {
     void atualizar(Contato contato);
     void remover(Long id);
     List<Contato> listarTodos();
+
+    List<Contato> buscarPorNome(String nome);
 }
