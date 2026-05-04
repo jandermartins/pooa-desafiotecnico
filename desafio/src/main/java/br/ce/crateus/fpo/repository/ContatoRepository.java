@@ -11,4 +11,8 @@ public interface ContatoRepository {
     List<Contato> listarTodos();
 
     List<Contato> buscarPorNome(String nome);
+
+    Contato buscarPorEmail(String email);
+
+    Contato buscarPorId(Long id);
 }

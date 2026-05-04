@@ -14,8 +14,8 @@ public class ContatoRepositoryImpl implements ContatoRepository{
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, contato.getNome());
-            stmt.setString(2, contato.getTelefone());
-            stmt.setString(3, contato.getEmail());
+            stmt.setString(2, contato.getEmail());
+            stmt.setString(3, contato.getTelefone());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao salvar contato", e);
@@ -40,7 +40,17 @@ public class ContatoRepositoryImpl implements ContatoRepository{
 
     @Override
     public void remover(Long id) {
-
+        String sql = "DELETE FROM contato WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Contato com ID " + id + " não encontrado.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao remover contato", e);
+        }
     }
 
     @Override
@@ -81,6 +91,38 @@ public class ContatoRepositoryImpl implements ContatoRepository{
             throw new RuntimeException("Erro ao buscar contatos por nome", e);
         }
         return contatos;
+    }
+
+    @Override
+    public Contato buscarPorEmail(String email) {
+        String sql = "SELECT * FROM contato WHERE email = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return mapper(rs);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar contato por e-mail", e);
+        }
+        return null;
+    }
+
+    @Override
+    public Contato buscarPorId(Long id) {
+        String sql = "SELECT * FROM contato WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return mapper(rs);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar contato por ID", e);
+        }
+        return null;
     }
 
     private Contato mapper(ResultSet rs) throws SQLException {
