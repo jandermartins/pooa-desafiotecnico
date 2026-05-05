@@ -31,7 +31,7 @@ public class ContatoRepositoryImpl implements ContatoRepository{
             stmt.setString(1, contato.getNome());
             stmt.setString(2, contato.getEmail());
             stmt.setString(3, contato.getTelefone());
-            stmt.setLong(5, contato.getId());
+            stmt.setLong(4, contato.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao atualizar contato", e);
