@@ -68,6 +68,11 @@ public class ContatoService {
         if (c.getTelefone() == null || c.getTelefone().trim().isEmpty()) {
             throw new IllegalArgumentException("Telefone é obrigatório");
         }
+        String apenasDigitos = c.getTelefone().replaceAll("\\D", "");
+        if (apenasDigitos.length() < 8 || apenasDigitos.length() > 15) {
+            throw new IllegalArgumentException("Telefone deve conter entre 8 e 15 dígitos (DDD + número).");
+        }
+
     }
 
     private void validarEmailUnico(String email) {
