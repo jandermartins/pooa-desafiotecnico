@@ -3,7 +3,7 @@
 ## 📌 Descrição do Projeto
 
 Sistema de agenda de contatos desenvolvido em **Java 11+** com acesso a banco de dados **PostgreSQL** via **JDBC puro**.  
-A aplicação é executada inteiramente no **console** (linha de comando) e implementa todas as operações **CRUD** (Cadastrar, Listar, Buscar, Atualizar, Remover e Listar por Categoria).  
+A aplicação é executada inteiramente no **console** (linha de comando) e implementa todas as operações **CRUD** (Cadastrar, Listar, Buscar, Atualizar e Remover).  
 
 O projeto foi estruturado respeitando os **cinco princípios SOLID**, com separação clara de camadas:
 
@@ -279,7 +279,7 @@ Este projeto é de uso acadêmico para o desafio técnico da disciplina **Progra
 
 ---
 
-## ✍️ Autor
+## ✍️ Autor: Francisco Jander S. Martins
 
 Desenvolvido como parte do portfólio de estudos.  
 Dúvidas ou sugestões: jandermartins@alu.ufc.br
